@@ -9,7 +9,7 @@ import RegisterPage from './pages/Register'
 import DetailsPage from './pages/DetailsPage'
 import BookingConfirmation from './pages/ConfirmationPage'
 import ProtectedRoute from './components/ProtectedRoute'
-import HostDashboard from './pages/HostDashboard'
+import HostDashboard from './pages/HostDashBoard'
 import CreateListingForm from './components/CreateListingForm'
 import EditListingForm from './components/EditListingForm'
 

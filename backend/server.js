@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
+cponst path = require('path');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./DB/connect.database'); 
 dotenv.config();
@@ -11,6 +12,7 @@ const authenticationRoutes = require('./Routes/AuthenticationRoutes');
 const listingRoutes = require('./Routes/listing.route');
 const bookingRoutes = require('./Routes/booking.route');
 const hostRoutes = require('./Routes/host.routes');
+
 
 const PORT = process.env.PORT ;
 
@@ -21,12 +23,13 @@ app.use(cors({
     origin: ['http://localhost:5173', 'https://your-production-url.com'],
     credentials: true
 }));
-
+const __dirname = require('path').resolve();
 // Routes
 app.use('/api/auth', authenticationRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/host', hostRoutes);
+
 
 // Start server
 app.listen(PORT, () => {
