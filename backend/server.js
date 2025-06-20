@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
-cponst path = require('path');
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./DB/connect.database'); 
 dotenv.config();
@@ -23,7 +23,7 @@ app.use(cors({
     origin: ['http://localhost:5173', 'https://your-production-url.com'],
     credentials: true
 }));
-const __dirname = require('path').resolve();
+
 // Routes
 app.use('/api/auth', authenticationRoutes);
 app.use('/api/listings', listingRoutes);
