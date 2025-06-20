@@ -20,7 +20,7 @@ const PORT = process.env.PORT ;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://your-production-url.com'],
+    origin: ['http://localhost:5173', 'https://stay-finder-eqvi.vercel.app'],
     credentials: true
 }));
 
