@@ -21,7 +21,7 @@ export default function DetailsPage() {
   useEffect(() => {
     async function fetchListing() {
       try {
-        const res = await fetch(`http://localhost:3000/api/listings/${id}`);
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/listings/${id}`);
         const data = await res.json();
         console.log("Fetched listing:", data);
         setListing(data);

@@ -19,7 +19,7 @@ useEffect(() => {
 
  const fetchListings = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/listings`);
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/listings`);
       const data = await response.json();
       console.log(data)
       setListings(data);
