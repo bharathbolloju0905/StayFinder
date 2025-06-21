@@ -24,8 +24,13 @@ module.exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token =  jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.cookie('token', token);
+    const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: 'None'
+    });
+
 
     res.status(200).json({ token, user: { id: user._id, email: user.email, role: user.role } });
   } catch (error) {
@@ -36,41 +41,46 @@ module.exports.login = async (req, res) => {
 
 
 module.exports.register = async (req, res) => {
-    const { fullname, email, password ,confirmpassword,role} = req.body;
+  const { fullname, email, password, confirmpassword, role } = req.body;
 
-    // Validate input
-    if (!fullname || !email || !password || !confirmpassword || !role) {
-        return res.status(400).json({ message: 'All fields are required' });
+  // Validate input
+  if (!fullname || !email || !password || !confirmpassword || !role) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  if (password !== confirmpassword) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
+
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'User already exists' });
     }
 
-    if (password !== confirmpassword) {
-        return res.status(400).json({ message: 'Passwords do not match' });
-    }
+    // Create new user
+    const genSalt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, genSalt);
+    const newUser = await User.create({
+      fullname, email,
+      password: hashedPassword,
+      role: role || 'user' // 
+    });
 
-    try {
-        // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(409).json({ message: 'User already exists' });
-        }
+    const token = jwt.sign({ id: newUser._id, email: newUser.email, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: 'None'
+    });
 
-        // Create new user
-        const genSalt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, genSalt);
-        const newUser = await User.create({ fullname, email,
-           password:hashedPassword,
-            role: role || 'user' // 
-           });
+    res.status(201).json({ token, user: { id: newUser._id, email: newUser.email, role: newUser.role } });
 
-        const token =  jwt.sign({ id: newUser._id, email: newUser.email, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
-          res.cookie('token', token);
-
-        res.status(201).json({ token, user: { id: newUser._id, email: newUser.email, role: newUser.role } });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
 }
 
 
