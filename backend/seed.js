@@ -8,7 +8,7 @@ const Booking = require('./models/booking.model');
 
 // Connect to MongoDB
 require('dotenv').config();
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGO_URL);
 
 async function seed() {
   try {
@@ -103,6 +103,6 @@ async function seed() {
   }
 }
 
-seed();
+// seed();
 
 module.exports = seed;
