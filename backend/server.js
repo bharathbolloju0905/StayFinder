@@ -5,7 +5,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const connectDB = require('./DB/connect.database'); 
+const connectDB = require('./DB/connect.database');
+const seed = require('./seed'); 
 dotenv.config();
 
 const authenticationRoutes = require('./Routes/AuthenticationRoutes');
@@ -34,5 +35,6 @@ app.use('/api/host', hostRoutes);
 // Start server
 app.listen(PORT, () => {
     connectDB(); 
+    // seed();   // Uncomment this line to seed the database
     console.log(`Server running on port ${PORT}`);
 });

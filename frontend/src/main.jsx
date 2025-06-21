@@ -4,13 +4,15 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { UserProvider } from './context/UserContext.jsx'
-// import {tostify} from 'react-hot-toast'
+
+import { Toaster } from 'react-hot-toast' 
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <UserProvider>
-      
+      <Toaster position="top-right" reverseOrder={false} />
         <App />
       </UserProvider>
     </BrowserRouter>

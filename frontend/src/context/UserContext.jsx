@@ -4,6 +4,7 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -14,21 +15,19 @@ export const UserProvider = ({ children }) => {
         });
         if (response.ok) {
           const data = await response.json();
-          
           setUser(data.user);
-        } else {
-          console.error('Failed to fetch user');
         }
       } catch (error) {
-        console.error('Error fetching user:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchUser();
-  },[]);
+  }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, loading }}>
       {children}
     </UserContext.Provider>
   );
