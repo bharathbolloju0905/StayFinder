@@ -33,8 +33,14 @@ app.use('/api/host', hostRoutes);
 
 
 // Start server
-app.listen(PORT, () => {
-    connectDB(); 
-    // seed();   // Uncomment this line to seed the database
-    console.log(`Server running on port ${PORT}`);
-});
+connectDB()
+  .then(() => {
+    // seed(); // Uncomment to seed the database ONCE
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to connect to database:', err);
+    process.exit(1);
+  });
